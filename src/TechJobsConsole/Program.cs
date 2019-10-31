@@ -1,5 +1,8 @@
-﻿using System;
+﻿
+
+using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace TechJobsConsole
 {
@@ -116,9 +119,72 @@ namespace TechJobsConsole
             return choiceKeys[choiceIdx];
         }
 
+
+        // Since the Job Lists that are stored in a CSV file are 
+        // retrieved in a Dictionary list, and the new field added 
+        // to the job record cannot change PrintJobs function.
+        //
+        // Reading documentation how to implements StringBuilder method
+        // https://www.tutorialsteacher.com/csharp/csharp-stringbuilder
+        //
+        // A StringBuilder method is needed to add different search
+        // results. As the user is typing a TechJob menu selection
+        public static StringBuilder StoreResults(StringBuilder selection, int numChars)
+        {
+            if (selection.Length == numChars)
+            {
+                return selection;
+            }
+            else
+            {
+                return StoreResults(selection.Append(" "), numChars);
+            }
+        }
+
         private static void PrintJobs(List<Dictionary<string, string>> someJobs)
         {
-            Console.WriteLine("printJobs is not implemented yet");
+            //Console.WriteLine("printJobs is not implemented yet");
+
+            // If there is more than one 
+            // Job postition
+            if (someJobs.Count != 0)
+            {   
+                // Loop though each Job using the key, value stored
+                // in the Dictionary method, and pass the search result
+                foreach (Dictionary<string, string> listJob in someJobs)
+                {
+                    Console.WriteLine("********************");
+
+                    // Loop though the User menu selection
+                    foreach (string key in listJob.Keys)
+                    {
+                        // Create a StringBuilder to store the search
+                        // results. 
+                        StringBuilder jobResults = new StringBuilder();
+
+                        // First grab the key (selection) that has been passed. 
+                        jobResults.Append(key);
+
+                        // Then use the new StringBuilder object to store 
+                        // search results that helper function returns which
+                        // includes the search term and the maximum characters
+                        jobResults = StoreResults(jobResults, 30);
+                        Console.WriteLine(jobResults + " : " + listJob[key]);
+                    }
+
+                    // Separate each Job result
+                    Console.WriteLine("\n");
+                }
+
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else
+            {
+                Console.WriteLine("No Search results to displsay!"); ;
+                Console.ReadKey();
+                Console.Clear();
+            }
         }
     }
 }
